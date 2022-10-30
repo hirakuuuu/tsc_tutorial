@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import Board from "./components/Square";
 import "./style/App.css";
 
 const calculateWinner = (squares: string[]): string | undefined => {
@@ -25,79 +26,39 @@ const calculateWinner = (squares: string[]): string | undefined => {
   return undefined;
 };
 
-const Square = ({
-  value,
-  onClick,
-}: {
-  value: string;
-  onClick: VoidFunction;
-}) => {
-  // stateの型も指定できる
-  // const [value, setValue] = useState<string>(undefined);
-
-  return (
-    <button className="square" onClick={onClick}>
-      {value}
-    </button>
-  );
-};
-
-const Board = () => {
-  const [squares, setSquares] = useState<string[]>(Array(9).fill(undefined));
-  const [XisNext, setXisNext] = useState<boolean>(true);
+function Game() {
+  const [history, setHistory] = useState<string[][]>([
+    Array(9).fill(undefined),
+  ]);
+  const [xIsNext, setXIsNext] = useState<boolean>(true);
 
   const handleClick = (i: number) => {
-    const newSquares = squares.slice();
+    const newHistory: string[][] = history.slice();
+    const newCurrent: string[] = newHistory[newHistory.length - 1];
+    const newSquares = newCurrent.slice();
     if (calculateWinner(newSquares) || newSquares[i]) {
       return;
     }
-    newSquares[i] = XisNext ? "X" : "O";
-    setSquares(newSquares);
-    setXisNext(!XisNext);
+    newSquares[i] = xIsNext ? "X" : "O";
+    setHistory(history.concat(newSquares));
+    setXIsNext(!xIsNext);
   };
 
-  const renderSquare = (i: number) => {
-    return <Square value={squares[i]} onClick={() => handleClick(i)} />;
-  };
-
-  const winner: string | undefined = calculateWinner(squares);
-  let status: string = "";
+  const current: string[] = history[history.length - 1];
+  const winner: string | undefined = calculateWinner(current);
+  let status: string;
   if (winner) {
     status = "Winner: " + winner;
   } else {
-    status = "Next player: " + (XisNext ? "X" : "O");
+    status = "Next player: " + (xIsNext ? "X" : "O");
   }
-
-  return (
-    <div>
-      <div className="status">{status}</div>
-      <div className="board-row">
-        {renderSquare(0)}
-        {renderSquare(1)}
-        {renderSquare(2)}
-      </div>
-      <div className="board-row">
-        {renderSquare(3)}
-        {renderSquare(4)}
-        {renderSquare(5)}
-      </div>
-      <div className="board-row">
-        {renderSquare(6)}
-        {renderSquare(7)}
-        {renderSquare(8)}
-      </div>
-    </div>
-  );
-};
-
-function Game() {
   return (
     <div className="game">
       <div className="game-board">
-        <Board />
+        <Board squares={current} onClick={handleClick(i)} />
       </div>
       <div className="game-info">
-        <div>{/* status */}</div>
+        <div className="status">{status}</div>
         <ol>{/* TODO */}</ol>
       </div>
     </div>
