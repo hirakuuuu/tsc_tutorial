@@ -158,7 +158,7 @@ const Game = () => {
       current.xIsNext
     );
 
-    console.log(changeSquare);
+    // console.log(changeSquare);
 
     if (changeSquare) {
       const next: Step = (({ squares, xIsNext }) => {
@@ -222,13 +222,13 @@ const canPlace = (p: number, squares: BoardState, xIsNext: boolean) => {
 
   const pos = {
     y: p % 8,
-    x: Math.round(p / 8),
+    x: Math.floor(p / 8),
   };
-  console.log(pos.x, pos.y);
 
   for (let i = 0; i < 8; i++) {
     let cx = pos.x + dx[i];
     let cy = pos.y + dy[i];
+    // console.log(cx, cy, squares[cx * 8 + cy]);
     while (
       0 <= cx &&
       cx < 8 &&
@@ -247,10 +247,13 @@ const canPlace = (p: number, squares: BoardState, xIsNext: boolean) => {
       cy < 8 &&
       squares[cx * 8 + cy] === (xIsNext ? "●" : "○")
     ) {
-      while (cx - dx[i] !== pos.x && cy - dy[i] !== pos.y) {
+      cx -= dx[i];
+      cy -= dy[i];
+      while (cx !== pos.x || cy !== pos.y) {
+        // console.log(cx, cy);
+        changeSquare.push(cx * 8 + cy);
         cx -= dx[i];
         cy -= dy[i];
-        changeSquare.push(cx * 8 + cy);
       }
     }
   }
@@ -262,8 +265,8 @@ const calculateWinner = (squares: BoardState) => {
   return undefined;
 };
 
-const Osero = () => {
+const Othello = () => {
   return <Game />;
 };
 
-export default Osero;
+export default Othello;
