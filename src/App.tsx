@@ -6,8 +6,11 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={`/marubatsu`} element={<Marubatsu />} />
-        <Route path={`/`} element={<Othello />} />
+        <Route
+          path={`${process.env.PUBLIC_URL}/marubatsu`}
+          element={<Marubatsu />}
+        />
+        <Route path={`${process.env.PUBLIC_URL}/`} element={<Othello />} />
       </Routes>
     </BrowserRouter>
   );
