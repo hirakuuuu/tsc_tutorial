@@ -2,35 +2,48 @@ import { useState } from "react";
 import "./style/Othello.css";
 import { Repeat } from "typescript-tuple";
 
-type squareState = "●" | undefined;
-type squareColor = "#000" | "#fff" | undefined;
+type squareState = true | false | undefined;
 
 type SquareProps = {
   value: squareState;
-  color: squareColor;
+  canPlace: boolean;
   onClick: () => void;
 };
 
 const Square = (props: SquareProps) => {
   return (
-    <button className="square" style={{color: props.color}} onClick={props.onClick}>
-      {props.value}
+    <button
+      className="square"
+      style={{
+        color: props.value ? "#000" : "#fff",
+        backgroundColor: props.canPlace ? "#61ca90" : "#3cb371",
+      }}
+      onClick={props.onClick}
+    >
+      {props.value !== undefined ? "●" : undefined}
     </button>
   );
 };
 
 type BoardState = Repeat<squareState, 64>;
-type ColorState = Repeat<squareColor, 64>;
+type PlaceState = Repeat<boolean, 64>;
 
 type BoardProps = {
   squares: BoardState;
-  colors: ColorState;
+  places: PlaceState;
   onClick: (i: number) => void;
 };
 
 const Board = (props: BoardProps) => {
   const renderSquare = (i: number) => {
-    return <Square value={props.squares[i]} color={props.colors[i]} onClick={() => props.onClick(i)} />;
+    return (
+      <Square
+        value={props.squares[i]}
+        // color={props.colors[i]}
+        canPlace={props.places[i]}
+        onClick={() => props.onClick(i)}
+      />
+    );
   };
   let SquareList: JSX.Element[][] = [];
   for (let i = 0; i < 8; i++) {
@@ -59,9 +72,10 @@ const Board = (props: BoardProps) => {
 
 type Step = {
   readonly squares: BoardState;
-  readonly colors: ColorState;
+  readonly places: PlaceState;
   readonly xIsNext: boolean;
   readonly count: [number, number];
+  readonly ending: boolean;
 };
 
 type GameState = {
@@ -101,16 +115,16 @@ const Game = () => {
           undefined,
           undefined,
           undefined,
-          "●",
-          "●",
+          true,
+          false,
           undefined,
           undefined,
           undefined,
           undefined,
           undefined,
           undefined,
-          "●",
-          "●",
+          false,
+          true,
           undefined,
           undefined,
           undefined,
@@ -139,81 +153,82 @@ const Game = () => {
           undefined,
           undefined,
         ],
-        colors: [
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          "#000",
-          "#fff",
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          "#fff",
-          "#000",
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
+        places: [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true, //
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true, //
+          false,
+          false,
+          false,
+          false,
+          true, //
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true, //
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
         ],
         xIsNext: true,
-        count: [2, 2]
+        count: [2, 2],
+        ending: false,
       },
     ],
     stepNumber: 0,
   });
 
   const current = state.history[state.stepNumber];
-  const winner = calculateWinner(current.squares);
+  const winner = calculateWinner(current.ending, current.count);
   let status: string;
   if (winner) {
     status = `Winner: ${winner}`;
@@ -224,34 +239,60 @@ const Game = () => {
   let score: string = `●: ${current.count[0]}, ○: ${current.count[1]}`;
 
   const handleClick = (i: number) => {
+    console.log(i);
     if (winner || current.squares[i]) return;
 
     // 置けるかどうかの判定
     const changeSquare: number[] | undefined = canPlace(
       i,
       current.squares,
-      current.colors,
+      current.places[i],
       current.xIsNext
     );
     console.log(changeSquare);
     if (changeSquare) {
-      const next: Step = (({ squares, colors, xIsNext, count }) => {
+      const next: Step = (({ squares, places, xIsNext, count, ending }) => {
         const nextSquares = squares.slice() as BoardState;
-        const nextColors = colors.slice() as ColorState;
-        const nextCount:[number, number] = [count[0], count[1]];
-        nextSquares[i] = "●";
-        nextColors[i] = xIsNext ? "#000" : "#fff";
-        nextCount[xIsNext ? 0: 1] += changeSquare.length+1;
-        nextCount[!xIsNext ? 0: 1] -= changeSquare.length;
+        const nextCount: [number, number] = [count[0], count[1]];
+        nextSquares[i] = xIsNext;
+        nextSquares[i] = xIsNext;
         for (let cs of changeSquare) {
-          nextColors[cs] = xIsNext ? "#000" : "#fff";
+          nextSquares[cs] = xIsNext;
         }
-        return {
-          squares: nextSquares,
-          colors: nextColors,
-          xIsNext: !xIsNext,
-          count: nextCount,
-        };
+        nextCount[xIsNext ? 0 : 1] += changeSquare.length + 1;
+        nextCount[!xIsNext ? 0 : 1] -= changeSquare.length;
+        const nextPlaces = changePlace(nextSquares, [...places], xIsNext);
+        const nextPlaces_enemy = changePlace(
+          nextSquares,
+          [...places],
+          !xIsNext
+        );
+        if (placeExists(nextPlaces)) {
+          return {
+            squares: nextSquares,
+            places: nextPlaces,
+            xIsNext: !xIsNext,
+            count: nextCount,
+            ending: false,
+          };
+        } else if (placeExists(nextPlaces_enemy)) {
+          window.alert("おける場所がないのでパスします");
+          return {
+            squares: nextSquares,
+            places: nextPlaces_enemy,
+            xIsNext: xIsNext,
+            count: nextCount,
+            ending: false,
+          };
+        } else {
+          return {
+            squares: nextSquares,
+            places: nextPlaces,
+            xIsNext: !xIsNext,
+            count: nextCount,
+            ending: true,
+          };
+        }
       })(current);
 
       setState(({ history, stepNumber }) => {
@@ -286,20 +327,29 @@ const Game = () => {
   return (
     <div className="game">
       <div className="game-board">
-        <Board squares={current.squares} colors={current.colors} onClick={handleClick} />
+        <Board
+          squares={current.squares}
+          places={current.places}
+          onClick={handleClick}
+        />
         <div className="status">{status}</div>
         <div className="score">{score}</div>
       </div>
       <div className="game-info">
-        
         <ol>{moves}</ol>
       </div>
     </div>
   );
 };
 
-const canPlace = (p: number, squares: BoardState, colors: ColorState, xIsNext: boolean) => {
-  if (colors[p]) return undefined;
+// 次にそのマスにおけるかどうかを判定
+const canPlace = (
+  p: number,
+  squares: BoardState,
+  place: boolean,
+  xIsNext: boolean
+) => {
+  if (!place) return undefined;
 
   let changeSquare: number[] = [];
   const dx: number[] = [-1, 0, 1, -1, 1, -1, 0, 1];
@@ -313,13 +363,12 @@ const canPlace = (p: number, squares: BoardState, colors: ColorState, xIsNext: b
   for (let i = 0; i < 8; i++) {
     let cx = pos.x + dx[i];
     let cy = pos.y + dy[i];
-    // console.log(cx, cy, squares[cx * 8 + cy]);
     while (
       0 <= cx &&
       cx < 8 &&
       0 <= cy &&
       cy < 8 &&
-      colors[cx * 8 + cy] === (xIsNext ? "#fff" : "#000")
+      squares[cx * 8 + cy] === (xIsNext ? false : true)
     ) {
       cx += dx[i];
       cy += dy[i];
@@ -330,12 +379,11 @@ const canPlace = (p: number, squares: BoardState, colors: ColorState, xIsNext: b
       cx < 8 &&
       0 <= cy &&
       cy < 8 &&
-      colors[cx * 8 + cy] === (xIsNext ? "#000" : "#fff")
+      squares[cx * 8 + cy] === (xIsNext ? true : false)
     ) {
       cx -= dx[i];
       cy -= dy[i];
       while (cx !== pos.x || cy !== pos.y) {
-        // console.log(cx, cy);
         changeSquare.push(cx * 8 + cy);
         cx -= dx[i];
         cy -= dy[i];
@@ -346,8 +394,41 @@ const canPlace = (p: number, squares: BoardState, colors: ColorState, xIsNext: b
   else return undefined;
 };
 
-const calculateWinner = (squares: BoardState) => {
-  return undefined;
+// 全てのマスに対して、おけるかどうかを判定
+const changePlace = (
+  nextSquares: BoardState,
+  curPlaces: PlaceState,
+  xIsNext: boolean
+) => {
+  for (let i = 0; i < 64; i++) {
+    let isPlaced = nextSquares[i] === undefined;
+    const changeSquare = canPlace(i, nextSquares, isPlaced, !xIsNext);
+    curPlaces[i] = changeSquare !== undefined;
+  }
+  return curPlaces;
+};
+
+// 勝敗判定
+// 両者ともおけるマスが無い状態 かつ 駒が多い方
+const calculateWinner = (ending: boolean, count: [number, number]) => {
+  if (!ending) return undefined;
+  if (count[0] > count[1]) {
+    return "●";
+  } else if (count[0] < count[1]) {
+    return "○";
+  } else {
+    return "draw";
+  }
+};
+
+// おける場所があるかどうか
+const placeExists = (places: PlaceState) => {
+  for (let i = 0; i < 64; i++) {
+    if (places[i]) {
+      return true;
+    }
+  }
+  return false;
 };
 
 const Othello = () => {
