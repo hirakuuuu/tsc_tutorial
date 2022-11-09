@@ -2,14 +2,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Marubatsu from "./Marubatsu";
 import Othello from "./Othello";
 
-const homeUrl = process.env.PUBLIC_URL;
-
 const App = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>
-        <Route path={`${homeUrl}/marubatsu`} element={<Marubatsu />} />
-        <Route path={`${homeUrl}/`} element={<Othello />} />
+        <Route path={`/marubatsu/`} element={<Marubatsu />} />
+        <Route path={`/`} element={<Othello />} />
       </Routes>
     </BrowserRouter>
   );
