@@ -1,21 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "../style/Dice.css";
 
 // 参考 https://little-strange.hatenablog.com/entry/2021/11/18/224629
 
-const Dice = () => {
-  const cbrtt = [
-    "rotateX(-10deg) rotateY(-10deg) rotateZ(0deg)",
-    "rotateX(-10deg) rotateY(-100deg) rotateZ(0deg)",
-    "rotateX(-100deg) rotateY(0deg) rotateZ(-10deg)",
-    "rotateX(80deg) rotateY(0deg) rotateZ(10deg)",
-    "rotateX(-10deg) rotateY(80deg) rotateZ(0deg)",
-    "rotateX(-10deg) rotateY(170deg) rotateZ(0deg)",
-  ];
-  const [rotate, setRotate] = useState(cbrtt[0]);
+type DiceProps = {
+  roll: number;
+  rotated: boolean;
+};
 
-  const handleClick = () => {
+const Dice = (props: DiceProps) => {
+  const cbrtt = [
+    "rotateX(0deg) rotateY(0deg) rotateZ(0deg)",
+    "rotateX(0deg) rotateY(-90deg) rotateZ(0deg)",
+    "rotateX(-90deg) rotateY(0deg) rotateZ(0deg)",
+    "rotateX(90deg) rotateY(0deg) rotateZ(0deg)",
+    "rotateX(0deg) rotateY(90deg) rotateZ(0deg)",
+    "rotateX(0deg) rotateY(180deg) rotateZ(0deg)",
+  ];
+  const [rotate, setRotate] = useState(cbrtt[props.roll]);
+
+  useEffect(() => {
     setRotate(
       "rotateX(" +
         (800 + 200 * Math.random()) +
@@ -26,12 +31,12 @@ const Dice = () => {
         "deg)"
     );
     setTimeout(() => {
-      setRotate(cbrtt[Math.floor(Math.random() * 6)]);
+      setRotate(cbrtt[props.roll]);
     }, 1500);
-  };
+  }, [props.rotated]);
 
   return (
-    <div className="cb01" style={{ transform: rotate }} onClick={handleClick}>
+    <div className="cb01" style={{ transform: rotate }}>
       <div className="cbs1"></div>
       <div className="cbs2"></div>
       <div className="cbs3"></div>

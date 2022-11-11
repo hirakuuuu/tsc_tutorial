@@ -10,7 +10,8 @@ const App = () => {
       <Routes>
         <Route path={`/`} element={<Main />} />
         <Route path={`/marubatsu/`} element={<Marubatsu />} />
-        <Route path={`/Othello`} element={<Othello />} />
+        <Route path={`/othello`} element={<Othello />} />
+        <Route path={`/yahtzee`} element={<Yahtzee />} />
       </Routes>
     </BrowserRouter>
   );

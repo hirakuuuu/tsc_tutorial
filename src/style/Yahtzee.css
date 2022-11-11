@@ -1,0 +1,8 @@
+.dice-wrapper {
+  margin: 40px 0;
+}
+
+.dice-wrapper div {
+  float: left;
+  margin-right: 40px;
+}
