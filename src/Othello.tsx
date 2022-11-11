@@ -236,7 +236,7 @@ const Game = () => {
     status = `Next player: ${current.xIsNext ? "●" : "○"}`;
   }
 
-  let score: string = `●: ${current.count[0]}, ○: ${current.count[1]}`;
+  let score: string = `●: ${current.count[0]} 　　 ○: ${current.count[1]}`;
 
   const handleClick = (i: number) => {
     console.log(i);
@@ -309,20 +309,17 @@ const Game = () => {
   };
 
   const jumpTo = (move: number) => {
+    if (
+      state.stepNumber + move < 0 ||
+      state.history.length <= state.stepNumber + move
+    ) {
+      return;
+    }
     setState((prev) => ({
       ...prev,
-      stepNumber: move,
+      stepNumber: prev.stepNumber + move,
     }));
   };
-
-  const moves = state.history.map((step, move) => {
-    const desc = move > 0 ? `Go to move #${move}` : "Go to game start";
-    return (
-      <li key={move}>
-        <button onClick={() => jumpTo(move)}>{desc}</button>
-      </li>
-    );
-  });
 
   return (
     <div className="game">
@@ -332,11 +329,12 @@ const Game = () => {
           places={current.places}
           onClick={handleClick}
         />
-        <div className="status">{status}</div>
+        <div className="status">
+          <button onClick={() => jumpTo(-1)}>◀</button>
+          <span className="status-text">{status}</span>
+          <button onClick={() => jumpTo(1)}>▶</button>
+        </div>
         <div className="score">{score}</div>
-      </div>
-      <div className="game-info">
-        <ol>{moves}</ol>
       </div>
     </div>
   );
