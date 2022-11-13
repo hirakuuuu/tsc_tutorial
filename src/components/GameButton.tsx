@@ -11,7 +11,7 @@ const GameButton = (props: ButtonProps) => {
       variant="contained"
       color="primary"
       onClick={props.onClick}
-      style={{ marginRight: "20px" }}
+      style={{ margin: "10px" }}
     >
       {props.title}
     </Button>

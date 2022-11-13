@@ -21,18 +21,20 @@ const Dice = (props: DiceProps) => {
   const [rotate, setRotate] = useState(cbrtt[props.roll]);
 
   useEffect(() => {
-    setRotate(
-      "rotateX(" +
-        (800 + 200 * Math.random()) +
-        "deg) rotateY(" +
-        (50 + 100 * Math.random()) +
-        "deg) rotateZ(" +
-        (50 + 100 * Math.random()) +
-        "deg)"
-    );
-    setTimeout(() => {
-      setRotate(cbrtt[props.roll]);
-    }, 1500);
+    if(props.rotated){
+      setRotate(
+        "rotateX(" +
+          (800 + 200 * Math.random()) +
+          "deg) rotateY(" +
+          (50 + 100 * Math.random()) +
+          "deg) rotateZ(" +
+          (50 + 100 * Math.random()) +
+          "deg)"
+      );
+      setTimeout(() => {
+        setRotate(cbrtt[props.roll]);
+      }, 1500);
+  };
   }, [props.rotated]);
 
   return (
