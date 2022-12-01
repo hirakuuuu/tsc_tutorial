@@ -1,8 +1,19 @@
 .dice-wrapper {
-  margin: 40px 0;
+  /* margin: 40px 0; */
 }
 
 .dice-wrapper div {
   float: left;
   margin-right: 40px;
+}
+
+.score-table-wrapper {
+  width: 20%;
+}
+.score-table {
+  margin: 0 auto;
+}
+
+.game-wrapper {
+  display: flex;
 }

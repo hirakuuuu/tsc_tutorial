@@ -6,7 +6,8 @@ import "../style/Dice.css";
 
 type DiceProps = {
   roll: number;
-  rotated: boolean;
+  rotated: number;
+  keeped: boolean;
 };
 
 const Dice = (props: DiceProps) => {
@@ -21,7 +22,7 @@ const Dice = (props: DiceProps) => {
   const [rotate, setRotate] = useState(cbrtt[props.roll]);
 
   useEffect(() => {
-    if(props.rotated){
+    if (props.rotated > 0 && !props.keeped) {
       setRotate(
         "rotateX(" +
           (800 + 200 * Math.random()) +
@@ -34,7 +35,7 @@ const Dice = (props: DiceProps) => {
       setTimeout(() => {
         setRotate(cbrtt[props.roll]);
       }, 1500);
-  };
+    }
   }, [props.rotated]);
 
   return (
