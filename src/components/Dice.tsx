@@ -39,13 +39,20 @@ const Dice = (props: DiceProps) => {
   }, [props.rotated]);
 
   return (
-    <div className="cb01" style={{ transform: rotate }}>
-      <div className="cbs1"></div>
-      <div className="cbs2"></div>
-      <div className="cbs3"></div>
-      <div className="cbs4"></div>
-      <div className="cbs5"></div>
-      <div className="cbs6"></div>
+    <div style={{ outline: props.keeped ? "2px solid #000000" : "none" }}>
+      <div
+        className="cb01"
+        style={{
+          transform: rotate,
+        }}
+      >
+        <div className="cbs1"></div>
+        <div className="cbs2"></div>
+        <div className="cbs3"></div>
+        <div className="cbs4"></div>
+        <div className="cbs5"></div>
+        <div className="cbs6"></div>
+      </div>
     </div>
   );
 };

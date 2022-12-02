@@ -21,10 +21,10 @@ import "./style/Yahtzee.css";
 */
 
 // 役
-type HandProps = {
-  name: string;
-  score: number | undefined;
-};
+// type HandProps = {
+//   name: string;
+//   score: number | undefined;
+// };
 
 // さいころ
 type DiceState = {
@@ -109,16 +109,11 @@ const Game = () => {
   const renderHand = (i: number) => {
     // スコアを固定
     const setScore = () => {
+      // スコアが算出される前には更新しないようにする
+      if (state.scores[i].value === undefined) {
+        return;
+      }
       setState(({ scores, dices, stepNumber, rotateNumber }) => {
-        // スコアが算出される前には更新しないようにする
-        if (scores[i].value === undefined) {
-          return {
-            scores: scores,
-            dices: dices,
-            stepNumber: stepNumber,
-            rotateNumber: rotateNumber,
-          };
-        }
         // スコアが算出されているならその役を使用済みにする
         const newScores = scores.slice() as AllScoreState;
         newScores[i].used = true;
@@ -149,9 +144,29 @@ const Game = () => {
             opacity: state.scores[i].used ? 1.0 : 0.5,
           }}
         >
-          <Button variant="text" onClick={setScore}>
+          <Button
+            variant="text"
+            onClick={setScore}
+            style={{ padding: "0px", fontSize: "1rem" }}
+          >
             {state.scores[i].value !== undefined ? state.scores[i].value : "-"}
           </Button>
+        </td>
+      </tr>
+    );
+  };
+  const renderTotalScore = () => {
+    let total_score: number = 0;
+    for (let i = 0; i < 12; i++) {
+      total_score += state.scores[i].used
+        ? (state.scores[i].value as number)
+        : 0;
+    }
+    return (
+      <tr>
+        <th scope="row">総合得点</th>
+        <td>
+          <span className="total-score-label">{total_score}</span>
         </td>
       </tr>
     );
@@ -176,8 +191,9 @@ const Game = () => {
     return (
       <Button
         variant="text"
+        className="dice-button"
         onClick={setKeeped}
-        style={{ border: state.dices[i].keeped ? "2px solid #000000" : "none" }}
+        style={{ padding: "20px" }}
       >
         <Dice
           roll={state.dices[i].roll}
@@ -190,53 +206,43 @@ const Game = () => {
 
   // サイコロを回したときの処理
   const rotate = () => {
+    if (state.rotateNumber === 3) {
+      window.alert("3回まわしたので役を選んでね");
+      return;
+    }
+    // ここを遅らせたい
+
     setState(({ scores, dices, stepNumber, rotateNumber }) => {
       const newDices = dices.slice() as BoardState;
-      // for (let i = 0; i < 5; i++) {
-      //   if (newDices[i].rotated) {
-      //     continue;
-      //   }
-      //   newDices[i].roll = Math.floor(Math.random() * 6);
-      //   newDices[i].rotated = true;
-      // }
       for (let i = 0; i < 5; i++) {
         if (newDices[i].keeped) {
           continue;
         }
         newDices[i].roll = Math.floor(Math.random() * 6);
       }
-
-      const newScores = scores.slice() as AllScoreState;
-      for (let i = 0; i < 12; i++) {
-        if (newScores[i].used) continue;
-        console.log(newScores[i].used);
-        newScores[i].value = calc_score(i, newDices);
-      }
       return {
-        scores: newScores,
+        scores: scores,
         dices: newDices,
         stepNumber: stepNumber,
         rotateNumber: rotateNumber + 1,
       };
     });
+    setTimeout(() => {
+      setState(({ scores, dices, stepNumber, rotateNumber }) => {
+        const newScores = scores.slice() as AllScoreState;
+        for (let i = 0; i < 12; i++) {
+          if (newScores[i].used) continue;
+          newScores[i].value = calc_score(i, dices);
+        }
+        return {
+          scores: newScores,
+          dices: dices,
+          stepNumber: stepNumber,
+          rotateNumber: rotateNumber,
+        };
+      });
+    }, 3100);
   };
-
-  // リセット
-  // const reset = () => {
-  //   setState(({ scores, dices, stepNumber, rotateNumber }) => {
-  //     const newDices = dices.slice() as BoardState;
-  //     for (let i = 0; i < 5; i++) {
-  //       if (newDices[i].keeped) continue;
-  //       newDices[i].rotated = false;
-  //     }
-  //     return {
-  //       scores: scores,
-  //       dices: newDices,
-  //       stepNumber: stepNumber,
-  //       rotateNumber: rotateNumber,
-  //     };
-  //   });
-  // };
 
   return (
     <div className="game-wrapper">
@@ -263,23 +269,22 @@ const Game = () => {
               {renderHand(9)}
               {renderHand(10)}
               {renderHand(11)}
-              <tr>
-                <th>得点</th>
-                <td>{}</td>
-              </tr>
+              {renderTotalScore()}
             </tbody>
           </table>
         </Paper>
       </div>
-      <div className="dice-wrapper">
-        {renderDice(0)}
-        {renderDice(1)}
-        {renderDice(2)}
-        {renderDice(3)}
-        {renderDice(4)}
-      </div>
-      <div>
-        <GameButton title={"回す"} onClick={rotate} />
+      <div className="board">
+        <div className="dice-wrapper">
+          {renderDice(0)}
+          {renderDice(1)}
+          {renderDice(2)}
+          {renderDice(3)}
+          {renderDice(4)}
+        </div>
+        <div>
+          <GameButton title={"回す"} onClick={rotate} />
+        </div>
       </div>
     </div>
   );

@@ -1,19 +1,38 @@
 .dice-wrapper {
-  /* margin: 40px 0; */
+  margin: 0 20px;
 }
 
 .dice-wrapper div {
   float: left;
-  margin-right: 40px;
 }
 
 .score-table-wrapper {
-  width: 20%;
+  min-width: 200px;
 }
 .score-table {
   margin: 0 auto;
 }
 
-.game-wrapper {
+.total-score-label {
+  width: 100%;
   display: flex;
+  align-items: inherit;
+  justify-content: space-around;
 }
+
+.game-wrapper {
+  width: 100%;
+  display: flex;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.board {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* html {
+  background-image: url("https://image1.shopserve.jp/nissin-ex-onlineshop.com/pic-labo/llimg/muku_natural_ex50_1.jpg?t=201611271118422");
+} */
