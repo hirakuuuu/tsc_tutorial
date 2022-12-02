@@ -1,0 +1,119 @@
+/* @keyframes kaiten {
+  0%,
+  10% {
+    transform: rotateX(10deg) rotateY(10deg) rotateZ(0deg);
+  }
+  15%,
+  25% {
+    transform: rotateX(10deg) rotateY(-80deg) rotateZ(0deg);
+  }
+  30%,
+  40% {
+    transform: rotateX(-100deg) rotateY(0deg) rotateZ(-10deg);
+  }
+  45%,
+  55% {
+    transform: rotateX(100deg) rotateY(0deg) rotateZ(10deg);
+  }
+  60%,
+  70% {
+    transform: rotateX(10deg) rotateY(-260deg) rotateZ(0deg);
+  }
+  75%,
+  85% {
+    transform: rotateX(10deg) rotateY(170deg) rotateZ(0deg);
+  }
+  90% {
+    transform: rotateX(370deg) rotateY(170deg) rotateZ(0deg);
+  }
+  95% {
+    transform: rotateX(370deg) rotateY(-190deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(10deg) rotateY(10deg) rotateZ(360deg);
+  }
+} */
+
+.cb01 {
+  transform-style: preserve-3d;
+  width: 50px;
+  height: 50px;
+  left: 25px;
+  /* animation: kaiten 20s linear infinite; */
+  transition: 1.5s;
+  /* transform: rotateX(-10deg) rotateY(-10deg) rotateZ(0deg); */
+}
+
+.cb01 div {
+  position: absolute;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  border: 3px solid #ddddddc0;
+  background-color: #ffffff;
+}
+
+.cbs1 {
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    #ff0000ff 19%,
+    #ff000000 20%
+  );
+  transform: translateZ(25px);
+}
+.cbs2 {
+  background-image: radial-gradient(
+      circle at 75% 25%,
+      #000000ff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 25% 75%, #000000ff 10%, #00000000 11%);
+  transform: rotateY(90deg) translateZ(25px);
+}
+.cbs3 {
+  background-image: radial-gradient(
+      circle at 75% 25%,
+      #000000ff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 50% 50%, #000000ff 15%, #00000000 16%),
+    radial-gradient(circle at 25% 75%, #000000ff 10%, #00000000 11%);
+  transform: rotateX(90deg) translateZ(25px);
+}
+.cbs4 {
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      #000000ff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 25% 75%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 75% 25%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 75% 75%, #000000ff 10%, #00000000 11%);
+  transform: rotateX(-90deg) translateZ(25px);
+}
+.cbs5 {
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      #000000ff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 25% 75%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 50% 50%, #000000ff 15%, #00000000 16%),
+    radial-gradient(circle at 75% 25%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 75% 75%, #000000ff 10%, #00000000 11%);
+  transform: rotateY(-90deg) translateZ(25px);
+}
+.cbs6 {
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      #000000ff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 25% 50%, #000000ff 12%, #00000000 13%),
+    radial-gradient(circle at 25% 75%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 75% 25%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 75% 50%, #000000ff 12%, #00000000 13%),
+    radial-gradient(circle at 75% 75%, #000000ff 10%, #00000000 11%);
+  transform: rotateY(180deg) translateZ(25px);
+}
