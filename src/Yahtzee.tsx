@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Dice from "./components/Dice";
 import { Repeat } from "typescript-tuple";
-import { Paper, Button } from "@material-ui/core";
+import { Paper, Button, Tooltip } from "@material-ui/core";
 import GameButton from "./components/GameButton";
 
 import "./style/Yahtzee.css";
@@ -43,7 +43,7 @@ type BoardState = Repeat<DiceState, 5>;
 
 // ゲームの状態
 type GameState = {
-  readonly scores: AllScoreState;
+  readonly scores: Repeat<AllScoreState, 2>;
   readonly dices: BoardState;
   readonly stepNumber: number;
   readonly rotateNumber: number;
@@ -52,18 +52,34 @@ type GameState = {
 const Game = () => {
   const [state, setState] = useState<GameState>({
     scores: [
-      { value: undefined, used: false },
-      { value: undefined, used: false },
-      { value: undefined, used: false },
-      { value: undefined, used: false },
-      { value: undefined, used: false },
-      { value: undefined, used: false },
-      { value: undefined, used: false },
-      { value: undefined, used: false },
-      { value: undefined, used: false },
-      { value: undefined, used: false },
-      { value: undefined, used: false },
-      { value: undefined, used: false },
+      [
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+      ],
+      [
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+        { value: undefined, used: false },
+      ],
     ],
     dices: [
       {
@@ -87,7 +103,7 @@ const Game = () => {
         keeped: false,
       },
     ],
-    stepNumber: 1,
+    stepNumber: 0,
     rotateNumber: 0,
   });
 
@@ -106,20 +122,50 @@ const Game = () => {
     "ヨット",
   ];
 
-  const renderHand = (i: number) => {
+  const handDetail = [
+    "1の目の合計値が得点",
+    "2の目の合計値が得点",
+    "3の目の合計値が得点",
+    "4の目の合計値が得点",
+    "5の目の合計値が得点",
+    "6の目の合計値が得点",
+    "さいころの合計値が得点",
+    "4個同じ目が出たら成立\n合計値が得点",
+    "2個と3個の組み合わせで成立\n合計値が得点",
+    "4個のさいころの連番で成立\n出目を問わず15点",
+    "5個のさいころの連番で成立\n出目を問わず30点",
+    "5個同じ目が出たら成立\n出目を問わず50点",
+  ];
+
+  const renderHandName = (i: number) => {
+    return (
+      <Tooltip
+        title={<span style={{ fontSize: "0.8rem" }}>{handDetail[i]}</span>}
+        placement="right-end"
+      >
+        <th>{handName[i]}</th>
+      </Tooltip>
+    );
+  };
+
+  const renderHandScore = (player_num: number, i: number) => {
     // スコアを固定
     const setScore = () => {
       // スコアが算出される前には更新しないようにする
-      if (state.scores[i].value === undefined) {
+      if (state.scores[player_num][i].value === undefined) {
+        return;
+      }
+      // スコアがすでに使われているなら更新しない
+      if (state.scores[player_num][i].used) {
         return;
       }
       setState(({ scores, dices, stepNumber, rotateNumber }) => {
         // スコアが算出されているならその役を使用済みにする
-        const newScores = scores.slice() as AllScoreState;
-        newScores[i].used = true;
+        const newScores = scores.slice() as Repeat<AllScoreState, 2>;
+        newScores[player_num][i].used = true;
         for (let i = 0; i < 12; i++) {
-          if (newScores[i].used) continue;
-          newScores[i].value = undefined;
+          if (newScores[player_num][i].used) continue;
+          newScores[player_num][i].value = undefined;
         }
 
         // サイコロの状態をリセットする
@@ -137,36 +183,53 @@ const Game = () => {
       });
     };
     return (
-      <tr>
-        <th>{handName[i]}</th>
-        <td
-          style={{
-            opacity: state.scores[i].used ? 1.0 : 0.5,
-          }}
+      <td
+        style={{
+          opacity: state.scores[player_num][i].used ? 1.0 : 0.5,
+        }}
+      >
+        <Button
+          variant="text"
+          onClick={setScore}
+          style={{ padding: "0px", fontSize: "1rem" }}
         >
-          <Button
-            variant="text"
-            onClick={setScore}
-            style={{ padding: "0px", fontSize: "1rem" }}
-          >
-            {state.scores[i].value !== undefined ? state.scores[i].value : "-"}
-          </Button>
-        </td>
+          {state.scores[player_num][i].value !== undefined
+            ? state.scores[player_num][i].value
+            : "-"}
+        </Button>
+      </td>
+    );
+  };
+
+  const renderHand = (i: number) => {
+    return (
+      <tr>
+        {renderHandName(i)}
+        {renderHandScore(0, i)}
+        {renderHandScore(1, i)}
       </tr>
     );
   };
-  const renderTotalScore = () => {
+
+  const calcTotalScore = (player_num: number) => {
     let total_score: number = 0;
     for (let i = 0; i < 12; i++) {
-      total_score += state.scores[i].used
-        ? (state.scores[i].value as number)
+      total_score += state.scores[player_num][i].used
+        ? (state.scores[player_num][i].value as number)
         : 0;
     }
+    return total_score;
+  };
+
+  const renderTotalScore = () => {
     return (
       <tr>
         <th scope="row">総合得点</th>
         <td>
-          <span className="total-score-label">{total_score}</span>
+          <span className="total-score-label">{calcTotalScore(0)}</span>
+        </td>
+        <td>
+          <span className="total-score-label">{calcTotalScore(1)}</span>
         </td>
       </tr>
     );
@@ -228,11 +291,12 @@ const Game = () => {
       };
     });
     setTimeout(() => {
+      console.log(state.stepNumber);
       setState(({ scores, dices, stepNumber, rotateNumber }) => {
-        const newScores = scores.slice() as AllScoreState;
+        const newScores = scores.slice() as Repeat<AllScoreState, 2>;
         for (let i = 0; i < 12; i++) {
-          if (newScores[i].used) continue;
-          newScores[i].value = calc_score(i, dices);
+          if (newScores[stepNumber % 2][i].used) continue;
+          newScores[stepNumber % 2][i].value = calc_score(i, dices);
         }
         return {
           scores: newScores,
@@ -251,10 +315,13 @@ const Game = () => {
           <table className="score-table">
             <tbody>
               <tr>
-                <th>ターン{state.stepNumber}/12</th>
+                <th>ターン{Math.floor(state.stepNumber / 2) + 1}/12</th>
+                <th>player1</th>
+                <th>player2</th>
               </tr>
               <tr>
                 <th>役名</th>
+                <th>得点</th>
                 <th>得点</th>
               </tr>
               {renderHand(0)}
@@ -318,7 +385,9 @@ const calc_score = (index: number, dice: BoardState) => {
     // フルハウス
     let fh_flag: number = 1;
     for (let i = 0; i < 6; i++) {
-      if (cnt_roll[i] === 3) {
+      if (cnt_roll[i] === 5) {
+        fh_flag *= 6;
+      } else if (cnt_roll[i] === 3) {
         fh_flag *= 3;
       } else if (cnt_roll[i] === 2) {
         fh_flag *= 2;
@@ -328,6 +397,7 @@ const calc_score = (index: number, dice: BoardState) => {
       score = sum_roll;
     }
   } else if (index === 9) {
+    // ショートストレート
     for (let i = 0; i < 3; i++) {
       let ss_flag: number = 0;
       for (let j = i; j < i + 4; j++) {
@@ -340,6 +410,7 @@ const calc_score = (index: number, dice: BoardState) => {
       }
     }
   } else if (index === 10) {
+    // ビックストレート
     for (let i = 0; i < 2; i++) {
       let ss_flag: number = 0;
       for (let j = i; j < i + 5; j++) {
