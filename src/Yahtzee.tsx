@@ -137,15 +137,19 @@ const Game = () => {
     "5個同じ目が出たら成立\n出目を問わず50点",
   ];
 
-  const renderHandName = (i: number) => {
+  const renderTooltip = (text: string, detail: string) => {
     return (
       <Tooltip
-        title={<span style={{ fontSize: "0.8rem" }}>{handDetail[i]}</span>}
+        title={<span style={{ fontSize: "0.8rem" }}>{detail}</span>}
         placement="right-end"
       >
-        <th>{handName[i]}</th>
+        <th>{text}</th>
       </Tooltip>
     );
+  };
+
+  const renderHandName = (i: number) => {
+    return renderTooltip(handName[i], handDetail[i]);
   };
 
   const renderHandScore = (player_num: number, i: number) => {
@@ -174,10 +178,20 @@ const Game = () => {
           newDices[i].keeped = false;
         }
 
+        if (stepNumber === 23) {
+          if (calcTotalScore(0) > calcTotalScore(1)) {
+            window.alert("player1の勝利!!!");
+          } else if (calcTotalScore(0) < calcTotalScore(1)) {
+            window.alert("player2の勝利!!!");
+          } else {
+            window.alert("引き分け!!!");
+          }
+        }
+
         return {
           scores: newScores,
           dices: newDices,
-          stepNumber: stepNumber + 1,
+          stepNumber: Math.min(23, stepNumber + 1),
           rotateNumber: 0,
         };
       });
@@ -211,12 +225,85 @@ const Game = () => {
     );
   };
 
+  const renderSubtotalScore = (player_num: number) => {
+    return (
+      <td>
+        <Button disabled>
+          <span
+            style={{
+              color: "rgba(0, 0, 0, 1)",
+              fontSize: "1rem",
+            }}
+          >
+            {bonus(player_num)}/63
+          </span>
+        </Button>
+      </td>
+    );
+  };
+
+  const renderSubtotal = () => {
+    const text: string = "小計";
+    const detail: string = "上記6つの役の合計";
+    return (
+      <tr>
+        {renderTooltip(text, detail)}
+        {renderSubtotalScore(0)}
+        {renderSubtotalScore(1)}
+      </tr>
+    );
+  };
+
+  const renderBonusScore = (player_num: number) => {
+    return (
+      <td>
+        <Button disabled>
+          <span
+            style={{
+              color: "rgba(0, 0, 0, 1)",
+              fontSize: "1rem",
+            }}
+          >
+            {bonus(player_num) >= 63 ? "+35" : "+0"}
+          </span>
+        </Button>
+      </td>
+    );
+  };
+
+  const renderBonus = () => {
+    const text: string = "ボーナス +35";
+    const detail: string = "上記6つの役の合計が63点以上で35点ボーナス";
+    return (
+      <tr>
+        {renderTooltip(text, detail)}
+        {renderBonusScore(0)}
+        {renderBonusScore(1)}
+      </tr>
+    );
+  };
+
+  const bonus = (player_num: number): number => {
+    let bonusScoreSum: number = 0;
+    for (let i = 0; i < 6; i++) {
+      if (state.scores[player_num][i].used) {
+        bonusScoreSum += state.scores[player_num][i].value as number;
+      }
+    }
+    return bonusScoreSum;
+  };
+
   const calcTotalScore = (player_num: number) => {
     let total_score: number = 0;
+    // スコアの合計を求める
     for (let i = 0; i < 12; i++) {
       total_score += state.scores[player_num][i].used
         ? (state.scores[player_num][i].value as number)
         : 0;
+    }
+    // ボーナスを達成しているなら35点足す
+    if (bonus(player_num) >= 63) {
+      total_score += 35;
     }
     return total_score;
   };
@@ -330,6 +417,8 @@ const Game = () => {
               {renderHand(3)}
               {renderHand(4)}
               {renderHand(5)}
+              {renderSubtotal()}
+              {renderBonus()}
               {renderHand(6)}
               {renderHand(7)}
               {renderHand(8)}
