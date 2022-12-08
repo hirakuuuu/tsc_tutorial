@@ -179,7 +179,6 @@ const Game = () => {
         }
 
         if (stepNumber === 23) {
-          let text: string = "";
           if (calcTotalScore(0) > calcTotalScore(1)) {
             window.alert("player1の勝利!!!");
           } else if (calcTotalScore(0) < calcTotalScore(1)) {
