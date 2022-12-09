@@ -122,6 +122,21 @@ const Game = () => {
     "ヨット",
   ];
 
+  const handIcon = [
+    "icon-ace",
+    "icon-deuce",
+    "icon-tray",
+    "icon-four",
+    "icon-five",
+    "icon-six",
+    "icon-choice",
+    "icon-fourdice",
+    "icon-fullhouse",
+    "icon-shortstrate",
+    "icon-bigstrate",
+    "icon-yahtzee",
+  ];
+
   const handDetail = [
     "1の目の合計値が得点",
     "2の目の合計値が得点",
@@ -137,19 +152,24 @@ const Game = () => {
     "5個同じ目が出たら成立\n出目を問わず50点",
   ];
 
-  const renderTooltip = (text: string, detail: string) => {
+  const renderTooltip = (text: string, detail: string, icon?: string) => {
     return (
       <Tooltip
         title={<span style={{ fontSize: "0.8rem" }}>{detail}</span>}
         placement="right-end"
       >
-        <th>{text}</th>
+        <th>
+          <div className="hand-name-cell">
+            <div className={icon}></div>
+            <span>{text}</span>
+          </div>
+        </th>
       </Tooltip>
     );
   };
 
   const renderHandName = (i: number) => {
-    return renderTooltip(handName[i], handDetail[i]);
+    return renderTooltip(handName[i], handDetail[i], handIcon[i]);
   };
 
   const renderHandScore = (player_num: number, i: number) => {
@@ -191,21 +211,29 @@ const Game = () => {
         return {
           scores: newScores,
           dices: newDices,
-          stepNumber: Math.min(23, stepNumber + 1),
+          stepNumber: stepNumber + 1,
           rotateNumber: 0,
         };
       });
     };
     return (
       <td
+        className={
+          state.stepNumber % 2 === player_num && state.stepNumber !== 24
+            ? "score-table-cell"
+            : ""
+        }
         style={{
-          opacity: state.scores[player_num][i].used ? 1.0 : 0.5,
+          opacity: state.scores[player_num][i].used ? 1.0 : 0.7,
         }}
       >
         <Button
           variant="text"
           onClick={setScore}
-          style={{ padding: "0px", fontSize: "1rem" }}
+          style={{
+            padding: "0px",
+            fontSize: "1rem",
+          }}
         >
           {state.scores[player_num][i].value !== undefined
             ? state.scores[player_num][i].value
@@ -228,11 +256,16 @@ const Game = () => {
   const renderSubtotalScore = (player_num: number) => {
     return (
       <td>
-        <Button disabled>
+        <Button
+          disabled
+          style={{
+            padding: "0px",
+            fontSize: "1rem",
+          }}
+        >
           <span
             style={{
               color: "rgba(0, 0, 0, 1)",
-              fontSize: "1rem",
             }}
           >
             {bonus(player_num)}/63
@@ -243,11 +276,13 @@ const Game = () => {
   };
 
   const renderSubtotal = () => {
-    const text: string = "小計";
-    const detail: string = "上記6つの役の合計";
     return (
       <tr>
-        {renderTooltip(text, detail)}
+        <th>
+          <div className="hand-name-cell">
+            <span>小計</span>
+          </div>
+        </th>
         {renderSubtotalScore(0)}
         {renderSubtotalScore(1)}
       </tr>
@@ -257,11 +292,16 @@ const Game = () => {
   const renderBonusScore = (player_num: number) => {
     return (
       <td>
-        <Button disabled>
+        <Button
+          disabled
+          style={{
+            padding: "0px",
+            fontSize: "1rem",
+          }}
+        >
           <span
             style={{
               color: "rgba(0, 0, 0, 1)",
-              fontSize: "1rem",
             }}
           >
             {bonus(player_num) >= 63 ? "+35" : "+0"}
@@ -272,11 +312,13 @@ const Game = () => {
   };
 
   const renderBonus = () => {
-    const text: string = "ボーナス +35";
-    const detail: string = "上記6つの役の合計が63点以上で35点ボーナス";
     return (
       <tr>
-        {renderTooltip(text, detail)}
+        <th>
+          <div className="hand-name-cell">
+            <span>ボーナス＋35</span>
+          </div>
+        </th>
         {renderBonusScore(0)}
         {renderBonusScore(1)}
       </tr>
@@ -308,16 +350,26 @@ const Game = () => {
     return total_score;
   };
 
-  const renderTotalScore = () => {
+  const renderTotalScore = (player_num: number) => {
+    return (
+      <td
+        className={
+          state.stepNumber % 2 === player_num && state.stepNumber !== 24
+            ? "score-table-cell"
+            : ""
+        }
+      >
+        <span className="total-score-label">{calcTotalScore(player_num)}</span>
+      </td>
+    );
+  };
+
+  const renderTotal = () => {
     return (
       <tr>
         <th scope="row">総合得点</th>
-        <td>
-          <span className="total-score-label">{calcTotalScore(0)}</span>
-        </td>
-        <td>
-          <span className="total-score-label">{calcTotalScore(1)}</span>
-        </td>
+        {renderTotalScore(0)}
+        {renderTotalScore(1)}
       </tr>
     );
   };
@@ -397,12 +449,14 @@ const Game = () => {
 
   return (
     <div className="game-wrapper">
-      <div className="score-table-wrapper">
-        <Paper elevation={1}>
+      <Paper elevation={1}>
+        <div className="score-table-wrapper">
           <table className="score-table">
             <tbody>
               <tr>
-                <th>ターン{Math.floor(state.stepNumber / 2) + 1}/12</th>
+                <th>
+                  ターン{Math.min(12, Math.floor(state.stepNumber / 2) + 1)}/12
+                </th>
                 <th>player1</th>
                 <th>player2</th>
               </tr>
@@ -419,17 +473,26 @@ const Game = () => {
               {renderHand(5)}
               {renderSubtotal()}
               {renderBonus()}
+              <tr>
+                <td colSpan={3}>
+                  <span className="bonus-text">
+                    <div className="icon-ace"></div>～
+                    <div className="icon-six"></div>
+                    の合計が63点以上でボーナス
+                  </span>
+                </td>
+              </tr>
               {renderHand(6)}
               {renderHand(7)}
               {renderHand(8)}
               {renderHand(9)}
               {renderHand(10)}
               {renderHand(11)}
-              {renderTotalScore()}
+              {renderTotal()}
             </tbody>
           </table>
-        </Paper>
-      </div>
+        </div>
+      </Paper>
       <div className="board">
         <div className="dice-wrapper">
           {renderDice(0)}
@@ -440,6 +503,7 @@ const Game = () => {
         </div>
         <div>
           <GameButton title={"回す"} onClick={rotate} />
+          <div>あと{3 - state.rotateNumber}回</div>
         </div>
       </div>
     </div>

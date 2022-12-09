@@ -1,3 +1,12 @@
+th,
+td {
+  border: solid 1px; /* 枠線指定 */
+}
+
+table {
+  border-collapse: collapse; /* セルの線を重ねる */
+}
+
 .dice-wrapper {
   margin: 0 20px;
 }
@@ -8,9 +17,14 @@
 
 .score-table-wrapper {
   min-width: 200px;
+  margin: 10px;
 }
 .score-table {
-  margin: 0 auto;
+  margin: 10px auto;
+}
+
+.score-table-cell {
+  background-color: #ffef6c;
 }
 
 .total-score-label {
@@ -37,3 +51,200 @@
 /* html {
   background-image: url("https://image1.shopserve.jp/nissin-ex-onlineshop.com/pic-labo/llimg/muku_natural_ex50_1.jpg?t=201611271118422");
 } */
+
+/*役のアイコン*/
+
+.hand-name-cell {
+  display: flex;
+}
+
+.icon-ace {
+  margin: 0 3px;
+  width: 20px;
+  height: 20px;
+  background-color: #000000;
+  border-radius: 3px;
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    #ffffffff 19%,
+    #ff000000 20%
+  );
+}
+
+.icon-deuce {
+  margin: 0 3px;
+  width: 20px;
+  height: 20px;
+  background-color: #000000;
+  border-radius: 3px;
+  background-image: radial-gradient(
+      circle at 75% 25%,
+      #ffffffff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 25% 75%, #ffffffff 10%, #00000000 11%);
+}
+
+.icon-tray {
+  margin: 0 3px;
+  width: 20px;
+  height: 20px;
+  background-color: #000000;
+  border-radius: 3px;
+  background-image: radial-gradient(
+      circle at 75% 25%,
+      #ffffffff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 50% 50%, #ffffffff 15%, #00000000 16%),
+    radial-gradient(circle at 25% 75%, #ffffffff 10%, #00000000 11%);
+}
+
+.icon-four {
+  margin: 0 3px;
+  width: 20px;
+  height: 20px;
+  background-color: #000000;
+  border-radius: 3px;
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      #ffffffff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 25% 75%, #ffffffff 10%, #00000000 11%),
+    radial-gradient(circle at 75% 25%, #ffffffff 10%, #00000000 11%),
+    radial-gradient(circle at 75% 75%, #ffffffff 10%, #00000000 11%);
+}
+
+.icon-five {
+  margin: 0 3px;
+  width: 20px;
+  height: 20px;
+  background-color: #000000;
+  border-radius: 3px;
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      #ffffffff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 25% 75%, #ffffffff 10%, #00000000 11%),
+    radial-gradient(circle at 50% 50%, #ffffffff 15%, #00000000 16%),
+    radial-gradient(circle at 75% 25%, #ffffffff 10%, #00000000 11%),
+    radial-gradient(circle at 75% 75%, #ffffffff 10%, #00000000 11%);
+}
+
+.icon-six {
+  margin: 0 3px;
+  width: 20px;
+  height: 20px;
+  background-color: #000000;
+  border-radius: 3px;
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      #ffffffff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 25% 50%, #ffffffff 12%, #00000000 13%),
+    radial-gradient(circle at 25% 75%, #ffffffff 10%, #00000000 11%),
+    radial-gradient(circle at 75% 25%, #ffffffff 10%, #00000000 11%),
+    radial-gradient(circle at 75% 50%, #ffffffff 12%, #00000000 13%),
+    radial-gradient(circle at 75% 75%, #ffffffff 10%, #00000000 11%);
+}
+
+.icon-choice {
+  margin: 0 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      #000000ff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 25% 75%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 50% 50%, #000000ff 15%, #00000000 16%),
+    radial-gradient(circle at 75% 25%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 75% 75%, #000000ff 10%, #00000000 11%);
+}
+
+.icon-fourdice {
+  margin: 0 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      #000000ff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 25% 75%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 75% 25%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 75% 75%, #000000ff 10%, #00000000 11%);
+}
+
+.icon-fullhouse {
+  margin: 0 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  background-image: radial-gradient(
+      circle at 35% 25%,
+      #000000ff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 65% 25%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 20% 75%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 50% 75%, #000000ff 12%, #00000000 13%),
+    radial-gradient(circle at 80% 75%, #000000ff 10%, #00000000 11%);
+}
+
+.icon-shortstrate {
+  margin: 0 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  background-image: radial-gradient(
+      circle at 14% 14%,
+      #000000ff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 38% 38%, #000000ff 12%, #00000000 13%),
+    radial-gradient(circle at 62% 62%, #000000ff 12%, #00000000 13%),
+    radial-gradient(circle at 86% 86%, #000000ff 10%, #00000000 11%);
+}
+
+.icon-bigstrate {
+  margin: 0 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  background-image: radial-gradient(
+      circle at 20% 20%,
+      #000000ff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 80% 20%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 30% 50%, #000000ff 12%, #00000000 13%),
+    radial-gradient(circle at 70% 50%, #000000ff 12%, #00000000 13%),
+    radial-gradient(circle at 50% 80%, #000000ff 10%, #00000000 11%);
+}
+
+.icon-yahtzee {
+  margin: 0 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  background-image: radial-gradient(
+      circle at 50% 20%,
+      #000000ff 10%,
+      #00000000 11%
+    ),
+    radial-gradient(circle at 20% 50%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 80% 50%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 35% 80%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 65% 80%, #000000ff 10%, #00000000 11%);
+}
+
+.bonus-text {
+  display: flex;
+}
