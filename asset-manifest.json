@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/tsc_tutorial/static/css/main.4c1a8df4.css",
-    "main.js": "/tsc_tutorial/static/js/main.d70c624f.js",
+    "main.css": "/tsc_tutorial/static/css/main.fb98431b.css",
+    "main.js": "/tsc_tutorial/static/js/main.b50574a8.js",
     "index.html": "/tsc_tutorial/index.html",
-    "main.4c1a8df4.css.map": "/tsc_tutorial/static/css/main.4c1a8df4.css.map",
-    "main.d70c624f.js.map": "/tsc_tutorial/static/js/main.d70c624f.js.map"
+    "main.fb98431b.css.map": "/tsc_tutorial/static/css/main.fb98431b.css.map",
+    "main.b50574a8.js.map": "/tsc_tutorial/static/js/main.b50574a8.js.map"
   },
   "entrypoints": [
-    "static/css/main.4c1a8df4.css",
-    "static/js/main.d70c624f.js"
+    "static/css/main.fb98431b.css",
+    "static/js/main.b50574a8.js"
   ]
 }
