@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import Dice from "./components/Dice";
 import { Repeat } from "typescript-tuple";
@@ -5,6 +6,7 @@ import { Paper, Button, Tooltip } from "@material-ui/core";
 import GameButton from "./components/GameButton";
 
 import "./style/Yahtzee.css";
+import HowToModal from "./components/HowToModal";
 
 /*
 このステップを12回繰り返す
@@ -19,12 +21,6 @@ import "./style/Yahtzee.css";
   選んだ役を選べないようにする
   サイコロをリセット
 */
-
-// 役
-// type HandProps = {
-//   name: string;
-//   score: number | undefined;
-// };
 
 // さいころ
 type DiceState = {
@@ -106,6 +102,10 @@ const Game = () => {
     stepNumber: 0,
     rotateNumber: 0,
   });
+  // 遊び方
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handName = [
     "エース",
@@ -502,10 +502,38 @@ const Game = () => {
           {renderDice(4)}
         </div>
         <div>
+          <div className="rotate-text">あと{3 - state.rotateNumber}回</div>
           <GameButton title={"回す"} onClick={rotate} />
-          <div>あと{3 - state.rotateNumber}回</div>
         </div>
       </div>
+      <HowToModal
+        open={open}
+        handleOpen={handleOpen}
+        handleClose={handleClose}
+        content={
+          <div>
+            <h2>ゲームの進行</h2>
+            <p>
+              １．自分の番になったら、まずダイスを５個振ります。
+              気に入らなかったらあと２回振り直すことが出来ます。
+              振り直すときは、何個でもかまいません。１個でも全部でもかまいません。
+            </p>
+            <p>
+              ２．出た目を１２種類の役の中のどれかに割り当て、点数のボタンを押します。
+              点数の付け方は役によって違いますので注意して下さい。
+              また、一つの役は１回しか選ぶことができませんので注意して下さい。
+            </p>
+            <p>
+              ３．点数を記入したら次の人の番になります。
+              一周して自分の番が回ってきたら、またダイスを振って空いている役を埋めます。
+            </p>
+            <p>
+              ４．１２周したらすべての役が埋まります。
+              点数を合計し、一番合計の多い人が勝ちます。
+            </p>
+          </div>
+        }
+      />
     </div>
   );
 };

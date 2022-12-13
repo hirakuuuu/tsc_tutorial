@@ -188,14 +188,14 @@ table {
   height: 20px;
   border-radius: 3px;
   background-image: radial-gradient(
-      circle at 35% 25%,
-      #000000ff 10%,
-      #00000000 11%
+      circle at 30% 25%,
+      #000000ff 11%,
+      #00000000 1%
     ),
-    radial-gradient(circle at 65% 25%, #000000ff 10%, #00000000 11%),
-    radial-gradient(circle at 20% 75%, #000000ff 10%, #00000000 11%),
-    radial-gradient(circle at 50% 75%, #000000ff 12%, #00000000 13%),
-    radial-gradient(circle at 80% 75%, #000000ff 10%, #00000000 11%);
+    radial-gradient(circle at 70% 25%, #000000ff 11%, #00000000 12%),
+    radial-gradient(circle at 15% 75%, #000000ff 10%, #00000000 11%),
+    radial-gradient(circle at 50% 75%, #000000ff 13%, #00000000 14%),
+    radial-gradient(circle at 85% 75%, #000000ff 10%, #00000000 11%);
 }
 
 .icon-shortstrate {
@@ -208,8 +208,8 @@ table {
       #000000ff 10%,
       #00000000 11%
     ),
-    radial-gradient(circle at 38% 38%, #000000ff 12%, #00000000 13%),
-    radial-gradient(circle at 62% 62%, #000000ff 12%, #00000000 13%),
+    radial-gradient(circle at 38% 38%, #000000ff 13%, #00000000 14%),
+    radial-gradient(circle at 62% 62%, #000000ff 13%, #00000000 14%),
     radial-gradient(circle at 86% 86%, #000000ff 10%, #00000000 11%);
 }
 
@@ -224,9 +224,9 @@ table {
       #00000000 11%
     ),
     radial-gradient(circle at 80% 20%, #000000ff 10%, #00000000 11%),
-    radial-gradient(circle at 30% 50%, #000000ff 12%, #00000000 13%),
-    radial-gradient(circle at 70% 50%, #000000ff 12%, #00000000 13%),
-    radial-gradient(circle at 50% 80%, #000000ff 10%, #00000000 11%);
+    radial-gradient(circle at 30% 50%, #000000ff 13%, #00000000 14%),
+    radial-gradient(circle at 70% 50%, #000000ff 13%, #00000000 14%),
+    radial-gradient(circle at 50% 80%, #000000ff 12%, #00000000 13%);
 }
 
 .icon-yahtzee {
@@ -236,15 +236,20 @@ table {
   border-radius: 3px;
   background-image: radial-gradient(
       circle at 50% 20%,
-      #000000ff 10%,
-      #00000000 11%
+      #000000ff 12%,
+      #00000000 13%
     ),
-    radial-gradient(circle at 20% 50%, #000000ff 10%, #00000000 11%),
-    radial-gradient(circle at 80% 50%, #000000ff 10%, #00000000 11%),
-    radial-gradient(circle at 35% 80%, #000000ff 10%, #00000000 11%),
-    radial-gradient(circle at 65% 80%, #000000ff 10%, #00000000 11%);
+    radial-gradient(circle at 20% 50%, #000000ff 12%, #00000000 13%),
+    radial-gradient(circle at 80% 50%, #000000ff 12%, #00000000 13%),
+    radial-gradient(circle at 35% 80%, #000000ff 11%, #00000000 12%),
+    radial-gradient(circle at 65% 80%, #000000ff 11%, #00000000 12%);
 }
 
 .bonus-text {
   display: flex;
+}
+
+.rotate-text {
+  text-align: center;
+  font-size: 1rem;
 }
