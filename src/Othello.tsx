@@ -13,7 +13,7 @@ type SquareProps = {
 const Square = (props: SquareProps) => {
   return (
     <button
-      className="square"
+      className="othello-square"
       style={{
         color: props.value ? "#000" : "#fff",
         backgroundColor: props.canPlace ? "#61ca90" : "#3cb371",

@@ -253,3 +253,33 @@ table {
   text-align: center;
   font-size: 1rem;
 }
+
+/*サイコロをキープしたときのボーダー*/
+.keeped-dice {
+  outline: solid #5767bf 3px;
+}
+/* 
+.keeped-dice:before,
+.keeped-dice:after {
+  content: "";
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  display: block;
+}
+.keeped-dice:before {
+  background-color: #ffffff;
+  top: 15px;
+  left: 15px;
+  content: "";
+}
+
+.keeped-dice:before:hover {
+  background-color: #f5f5f5;
+}
+.keeped-dice:after {
+  border-right: solid 1px #5767bf;
+  border-bottom: solid 1px #5767bf;
+  bottom: 0;
+  right: 0;
+} */

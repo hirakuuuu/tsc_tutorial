@@ -39,7 +39,7 @@ const Dice = (props: DiceProps) => {
   }, [props.rotated]);
 
   return (
-    <div style={{ outline: props.keeped ? "2px solid #000000" : "none" }}>
+    <div className={props.keeped ? "keeped-dice" : ""}>
       <div
         className="cb01"
         style={{
