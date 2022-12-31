@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import "../style/Dice.css";
+import "../../../style/yahtzee/Dice.css";
 
 // 参考 https://little-strange.hatenablog.com/entry/2021/11/18/224629
 

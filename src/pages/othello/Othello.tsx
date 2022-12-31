@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./style/Othello.css";
+import "../../style/othello/Othello.css";
 import { Repeat } from "typescript-tuple";
 
 type squareState = true | false | undefined;

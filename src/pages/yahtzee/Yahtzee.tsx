@@ -1,12 +1,12 @@
 import React from "react";
 import { useState } from "react";
-import Dice from "./components/Dice";
+import Dice from "../../components/organisms/yahtzee/Dice";
 import { Repeat } from "typescript-tuple";
 import { Paper, Button, Tooltip } from "@material-ui/core";
-import GameButton from "./components/GameButton";
+import GameButton from "../../components/organisms/GameButton";
 
-import "./style/Yahtzee.css";
-import HowToModal from "./components/HowToModal";
+import "../../style/yahtzee/Yahtzee.css";
+import HowToModal from "../../components/organisms/HowToModal";
 
 /*
 このステップを12回繰り返す

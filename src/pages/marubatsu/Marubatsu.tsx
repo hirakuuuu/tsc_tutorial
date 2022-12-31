@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./style/App.css";
+import "../../style/App.css";
 import { Repeat } from "typescript-tuple";
 
 type SquareState = "O" | "X" | undefined;
@@ -167,7 +167,7 @@ const calculateWinner = (squares: BoardState) => {
 };
 
 const Marubatsu = () => {
-    return <Game />
-}
+  return <Game />;
+};
 
 export default Marubatsu;
