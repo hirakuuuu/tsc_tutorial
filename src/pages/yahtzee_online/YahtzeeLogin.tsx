@@ -26,6 +26,7 @@ const YahtzeeLogin = (props: any) => {
       name: name,
     };
     socket.emit("WAITING_LOGIN", client);
+    console.log(name);
     navigate("/yahtzee_online/waiting", { state: { name: name } });
   };
 

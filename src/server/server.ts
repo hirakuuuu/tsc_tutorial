@@ -49,15 +49,24 @@ io.on("connection", (socket: socketio.Socket) => {
   socket.on("disconnect", () => {
     // ブラウザが切断したときの処理
     console.log("user disconnected");
+
+    // 待機中に切断された→キューから削除
     let deleteId = waitingClients.findIndex((id) => id === clientId);
     if (deleteId !== -1) {
       waitingClients.splice(deleteId, 1);
     }
+
+    // 対戦中に切断された→ユーザの接続状態をリセット
     if (isConnected[clientId] !== undefined) {
       isConnected[clientId] = "";
       numClients[roomId]--;
-      io.to(roomId).emit("USER_DISCONNECTED");
+      io.to(roomId).emit("OPPONENT_DISCONNECTED");
     }
+  });
+
+  socket.on("ROOM_LEAVING", (data) => {
+    console.log(`${data.clientId}が退出しました。`);
+    isConnected[data.clientId] = "";
   });
 
   // ユーザの情報
@@ -88,7 +97,11 @@ io.on("connection", (socket: socketio.Socket) => {
   socket.on(
     "ACCEPT_JOIN_ROOM",
     (data: { roomId: string; clientId: string; name: string }) => {
-      if (isConnected[data.clientId] === undefined) {
+      console.log(isConnected[data.clientId]);
+      if (
+        isConnected[data.clientId] === undefined ||
+        isConnected[data.clientId] === ""
+      ) {
         isConnected[data.clientId] = data.roomId;
         if (numClients[data.roomId] === undefined) {
           numClients[data.roomId] = 0;

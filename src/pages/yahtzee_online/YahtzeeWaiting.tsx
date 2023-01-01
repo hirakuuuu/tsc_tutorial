@@ -11,7 +11,8 @@ const YahtzeeWaiting = (props: any) => {
   // 名前
   const { state } = useLocation();
   console.log(state);
-  const [name, setName] = useState(state.name);
+  const name = state.name;
+  console.log(name);
 
   // ルームに招待される
   socket.on(

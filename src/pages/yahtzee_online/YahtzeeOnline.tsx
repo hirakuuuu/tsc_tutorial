@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Repeat } from "typescript-tuple";
 import { Paper, Button, Tooltip } from "@material-ui/core";
 
@@ -47,6 +47,7 @@ type GameState = {
 };
 
 const Game = (props: any) => {
+  const navigate = useNavigate();
   const [state, setState] = useState<GameState>({
     scores: [
       [
@@ -151,13 +152,11 @@ const Game = (props: any) => {
     });
   });
 
-  // useEffect(() => {
-
-  //   // これをしないと2回追加する
-  //   return () => {
-  //     socket.off("YAHTZEE_CHANGE_TURN_TO");
-  //   };
-  // }, []);
+  socket.on("OPPONENT_DISCONNECTED", () => {
+    window.alert("接続が切断されました。ホームに戻ります。");
+    socket.emit("ROOM_LEAVING", { clientId: socket.id });
+    navigate("/yahtzee_online");
+  });
 
   const handName = [
     "エース",
