@@ -1,7 +1,7 @@
 import React from "react";
-import LinkButton from "./components/LinkButton";
+import LinkButton from "../components/organisms/LinkButton";
 
-import "./style/Main.css";
+import "../style/Main.css";
 
 const Main = () => {
   return (
@@ -11,6 +11,7 @@ const Main = () => {
         <LinkButton to={"/marubatsu"} title={"〇☓ゲーム"} />
         <LinkButton to={"/othello"} title={"オセロ"} />
         <LinkButton to={"/yahtzee"} title={"ヨット"} />
+        <LinkButton to={"/yahtzee_online"} title={"ヨットonline"} />
       </div>
     </div>
   );

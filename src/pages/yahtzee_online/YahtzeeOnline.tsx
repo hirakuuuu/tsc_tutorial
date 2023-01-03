@@ -1,12 +1,13 @@
-import React from "react";
-import { useState } from "react";
-import Dice from "./components/Dice";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Repeat } from "typescript-tuple";
 import { Paper, Button, Tooltip } from "@material-ui/core";
-import GameButton from "./components/GameButton";
 
-import "./style/Yahtzee.css";
-import HowToModal from "./components/HowToModal";
+import Dice from "../../components/organisms/yahtzee/Dice";
+import GameButton from "../../components/organisms/GameButton";
+import HowToModal from "../../components/organisms/HowToModal";
+
+import "../../style/yahtzee/Yahtzee.css";
 
 /*
 このステップを12回繰り返す
@@ -45,7 +46,8 @@ type GameState = {
   readonly rotateNumber: number;
 };
 
-const Game = () => {
+const Game = (props: any) => {
+  const navigate = useNavigate();
   const [state, setState] = useState<GameState>({
     scores: [
       [
@@ -106,6 +108,61 @@ const Game = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  // ソケット
+  const socket = props.socket;
+  // 遷移前からのステート
+  const location = useLocation();
+  const roomId = location.state.roomId;
+  const players = [location.state.player1, location.state.player2];
+  const myTurn: number = location.state.firstPlayer === socket.id ? 0 : 1;
+
+  socket.on("YAHTZEE_CHANGE_TURN_TO", (state: GameState) => {
+    setState(state);
+  });
+
+  socket.on("YAHTZEE_CHANGE_KEEP_TO", (dices: Repeat<DiceState, 5>) => {
+    setState((prevstate) => {
+      return {
+        ...prevstate,
+        dices: dices,
+      };
+    });
+  });
+
+  socket.on(
+    "YAHTZEE_CHANGE_DICE_TO",
+    (data: { dices: Repeat<DiceState, 5>; rotateNumber: number }) => {
+      setState((prevstate) => {
+        return {
+          ...prevstate,
+          dices: data.dices,
+          rotateNumber: data.rotateNumber,
+        };
+      });
+    }
+  );
+
+  socket.on("YAHTZEE_CHANGE_SCORE_TO", (scores: Repeat<AllScoreState, 2>) => {
+    setState((prevstate) => {
+      return {
+        ...prevstate,
+        scores: scores,
+      };
+    });
+  });
+
+  useEffect(() => {
+    socket.on("OPPONENT_DISCONNECTED", () => {
+      window.alert("接続が切断されました。ホームに戻ります。");
+      socket.emit("ROOM_LEAVING", { clientId: socket.id });
+      navigate("/yahtzee_online");
+    });
+
+    return () => {
+      socket.off("OPPONENT_DISCONNECTED");
+    };
+  }, []);
 
   const handName = [
     "エース",
@@ -175,46 +232,59 @@ const Game = () => {
   const renderHandScore = (player_num: number, i: number) => {
     // スコアを固定
     const setScore = () => {
-      // スコアが算出される前には更新しないようにする
-      if (state.scores[player_num][i].value === undefined) {
-        return;
-      }
-      // スコアがすでに使われているなら更新しない
-      if (state.scores[player_num][i].used) {
-        return;
-      }
-      setState(({ scores, dices, stepNumber, rotateNumber }) => {
-        // スコアが算出されているならその役を使用済みにする
-        const newScores = scores.slice() as Repeat<AllScoreState, 2>;
-        newScores[player_num][i].used = true;
-        for (let i = 0; i < 12; i++) {
-          if (newScores[player_num][i].used) continue;
-          newScores[player_num][i].value = undefined;
+      if (myTurn === player_num) {
+        // スコアが算出される前には更新しないようにする
+        if (state.scores[player_num][i].value === undefined) {
+          return;
         }
-
-        // サイコロの状態をリセットする
-        const newDices = dices.slice() as BoardState;
-        for (let i = 0; i < 5; i++) {
-          newDices[i].keeped = false;
+        // スコアがすでに使われているなら更新しない
+        if (state.scores[player_num][i].used) {
+          return;
         }
-
-        if (stepNumber === 23) {
-          if (calcTotalScore(0) > calcTotalScore(1)) {
-            window.alert("player1の勝利!!!");
-          } else if (calcTotalScore(0) < calcTotalScore(1)) {
-            window.alert("player2の勝利!!!");
-          } else {
-            window.alert("引き分け!!!");
+        setState(({ scores, dices, stepNumber, rotateNumber }) => {
+          // スコアが算出されているならその役を使用済みにする
+          const newScores = scores.slice() as Repeat<AllScoreState, 2>;
+          newScores[player_num][i].used = true;
+          for (let i = 0; i < 12; i++) {
+            if (newScores[player_num][i].used) continue;
+            newScores[player_num][i].value = undefined;
           }
-        }
 
-        return {
-          scores: newScores,
-          dices: newDices,
-          stepNumber: stepNumber + 1,
-          rotateNumber: 0,
-        };
-      });
+          // サイコロの状態をリセットする
+          const newDices = dices.slice() as BoardState;
+          for (let i = 0; i < 5; i++) {
+            newDices[i].keeped = false;
+          }
+
+          if (stepNumber === 23) {
+            if (calcTotalScore(0) > calcTotalScore(1)) {
+              window.alert("player1の勝利!!!");
+            } else if (calcTotalScore(0) < calcTotalScore(1)) {
+              window.alert("player2の勝利!!!");
+            } else {
+              window.alert("引き分け!!!");
+            }
+          }
+          socket.emit("YAHTZEE_CHANGE_TURN_FROM", {
+            state: {
+              scores: newScores,
+              dices: newDices,
+              stepNumber: stepNumber + 1,
+              rotateNumber: 0,
+            },
+            roomId,
+          });
+
+          return {
+            scores: newScores,
+            dices: newDices,
+            stepNumber: stepNumber + 1,
+            rotateNumber: 0,
+          };
+        });
+      } else {
+        window.alert("相手の番です");
+      }
     };
     return (
       <td
@@ -376,18 +446,25 @@ const Game = () => {
 
   const renderDice = (i: number) => {
     const setKeeped = () => {
-      setState(({ scores, dices, stepNumber, rotateNumber }) => {
-        const newDices = dices.slice() as BoardState;
-        if (rotateNumber > 0) {
-          newDices[i].keeped = !newDices[i].keeped;
-        }
-        return {
-          scores: scores,
-          dices: newDices,
-          stepNumber: stepNumber,
-          rotateNumber: rotateNumber,
-        };
-      });
+      if (myTurn === state.stepNumber % 2) {
+        setState((prevstate) => {
+          const newDices = prevstate.dices.slice() as BoardState;
+          if (prevstate.rotateNumber > 0) {
+            newDices[i].keeped = !newDices[i].keeped;
+          }
+          socket.emit("YAHTZEE_CHANGE_KEEP_FROM", {
+            dices: newDices,
+            roomId,
+          });
+
+          return {
+            ...prevstate,
+            dices: newDices,
+          };
+        });
+      } else {
+        window.alert("相手の番です");
+      }
     };
 
     return (
@@ -408,43 +485,61 @@ const Game = () => {
 
   // サイコロを回したときの処理
   const rotate = () => {
-    if (state.rotateNumber === 3) {
-      window.alert("3回まわしたので役を選んでね");
-      return;
-    }
-    // ここを遅らせたい
-
-    setState(({ scores, dices, stepNumber, rotateNumber }) => {
-      const newDices = dices.slice() as BoardState;
-      for (let i = 0; i < 5; i++) {
-        if (newDices[i].keeped) {
-          continue;
-        }
-        newDices[i].roll = Math.floor(Math.random() * 6);
+    if (myTurn === state.stepNumber % 2) {
+      if (state.rotateNumber === 3) {
+        window.alert("3回まわしたので役を選んでね");
+        return;
       }
-      return {
-        scores: scores,
-        dices: newDices,
-        stepNumber: stepNumber,
-        rotateNumber: rotateNumber + 1,
-      };
-    });
-    setTimeout(() => {
-      console.log(state.stepNumber);
+      // ここを遅らせたい
+
       setState(({ scores, dices, stepNumber, rotateNumber }) => {
-        const newScores = scores.slice() as Repeat<AllScoreState, 2>;
-        for (let i = 0; i < 12; i++) {
-          if (newScores[stepNumber % 2][i].used) continue;
-          newScores[stepNumber % 2][i].value = calc_score(i, dices);
+        const newDices = dices.slice() as BoardState;
+        for (let i = 0; i < 5; i++) {
+          if (newDices[i].keeped) {
+            continue;
+          }
+          newDices[i].roll = Math.floor(Math.random() * 6);
         }
+        socket.emit("YAHTZEE_CHANGE_DICE_FROM", {
+          dices: newDices,
+          rotateNumber: rotateNumber + 1,
+          roomId,
+        });
+
         return {
-          scores: newScores,
-          dices: dices,
+          scores: scores,
+          dices: newDices,
           stepNumber: stepNumber,
-          rotateNumber: rotateNumber,
+          rotateNumber: rotateNumber + 1,
         };
       });
-    }, 3100);
+      setTimeout(() => {
+        // console.log(state.stepNumber);
+        setState((prevstate) => {
+          const newScores = prevstate.scores.slice() as Repeat<
+            AllScoreState,
+            2
+          >;
+          for (let i = 0; i < 12; i++) {
+            if (newScores[prevstate.stepNumber % 2][i].used) continue;
+            newScores[prevstate.stepNumber % 2][i].value = calc_score(
+              i,
+              prevstate.dices
+            );
+          }
+          socket.emit("YAHTZEE_CHANGE_SCORE_FROM", {
+            scores: newScores,
+            roomId,
+          });
+          return {
+            ...prevstate,
+            scores: newScores,
+          };
+        });
+      }, 3100);
+    } else {
+      window.alert("相手の番です");
+    }
   };
 
   return (
@@ -457,8 +552,8 @@ const Game = () => {
                 <th>
                   ターン{Math.min(12, Math.floor(state.stepNumber / 2) + 1)}/12
                 </th>
-                <th>player1</th>
-                <th>player2</th>
+                <th>{players[0]}</th>
+                <th>{players[1]}</th>
               </tr>
               <tr>
                 <th>役名</th>
@@ -613,8 +708,8 @@ const calc_score = (index: number, dice: BoardState) => {
   return score;
 };
 
-const Yahtzee = () => {
-  return <Game />;
+const YahtzeeOnline = (props: any) => {
+  return <Game socket={props.socket} />;
 };
 
-export default Yahtzee;
+export default YahtzeeOnline;
