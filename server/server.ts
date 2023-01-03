@@ -1,13 +1,21 @@
+import path from "path";
 import http from "http";
 import express from "express";
 import socketio from "socket.io";
 
+const router = express.Router();
+
 const app: express.Express = express();
 const server: http.Server = http.createServer(app);
 
-app.get("/", (req, res) => {
-  res.status(200).send("OK!");
+// 静的ファイルのルーティング
+router.use(express.static("public"));
+
+router.get("*", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "./public/index.html"));
 });
+
+app.use("/", router);
 
 const io: socketio.Server = new socketio.Server(server, {
   cors: {
