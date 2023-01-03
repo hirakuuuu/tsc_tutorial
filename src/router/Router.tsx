@@ -10,7 +10,7 @@ import YahtzeeOnline from "../pages/yahtzee_online/YahtzeeOnline";
 import YahtzeeWaiting from "../pages/yahtzee_online/YahtzeeWaiting";
 
 const port = 5000;
-const socket = io(`http://asobitai.onrender.com:${port}`);
+const socket = io(`https://asobitai.onrender.com:${port}`);
 // サーバに接続できた場合のイベント処理を定義する
 socket.on("connect", () => {
   console.log(`socket.connectを出力`);
