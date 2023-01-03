@@ -2,8 +2,6 @@ import http from "http";
 import express from "express";
 import socketio from "socket.io";
 
-import { PlayerState } from "../types/PlayerState";
-
 const app: express.Express = express();
 const server: http.Server = http.createServer(app);
 
