@@ -3,19 +3,16 @@ import http from "http";
 import express from "express";
 import socketio from "socket.io";
 
-const router = express.Router();
-
 const app: express.Express = express();
 const server: http.Server = http.createServer(app);
 
-// 静的ファイルのルーティング
-router.use(express.static("public"));
+//ミドルウエアでstaticパスを追加（ただ、これだけだと直アクセスや無いpathだと動かない）
+app.use(express.static(path.join(__dirname, "..", "build")));
 
-router.get("*", (req, res, next) => {
-  res.sendFile(path.join(__dirname, "./public/index.html"));
+//これを追加（全てをindex.htmlにリダイレクト。いわゆるrewrite設定）
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, "..", "build", "index.html"));
 });
-
-app.use("/", router);
 
 const io: socketio.Server = new socketio.Server(server, {
   cors: {
