@@ -152,11 +152,17 @@ const Game = (props: any) => {
     });
   });
 
-  socket.on("OPPONENT_DISCONNECTED", () => {
-    window.alert("接続が切断されました。ホームに戻ります。");
-    socket.emit("ROOM_LEAVING", { clientId: socket.id });
-    navigate("/yahtzee_online");
-  });
+  useEffect(() => {
+    socket.on("OPPONENT_DISCONNECTED", () => {
+      window.alert("接続が切断されました。ホームに戻ります。");
+      socket.emit("ROOM_LEAVING", { clientId: socket.id });
+      navigate("/yahtzee_online");
+    });
+
+    return () => {
+      socket.off("OPPONENT_DISCONNECTED");
+    };
+  }, []);
 
   const handName = [
     "エース",
@@ -508,7 +514,7 @@ const Game = (props: any) => {
         };
       });
       setTimeout(() => {
-        console.log(state.stepNumber);
+        // console.log(state.stepNumber);
         setState((prevstate) => {
           const newScores = prevstate.scores.slice() as Repeat<
             AllScoreState,

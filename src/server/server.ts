@@ -48,7 +48,7 @@ io.on("connection", (socket: socketio.Socket) => {
 
   socket.on("disconnect", () => {
     // ブラウザが切断したときの処理
-    console.log("user disconnected");
+    console.log(`[disconnect] ${clientId}`);
 
     // 待機中に切断された→キューから削除
     let deleteId = waitingClients.findIndex((id) => id === clientId);
@@ -57,15 +57,16 @@ io.on("connection", (socket: socketio.Socket) => {
     }
 
     // 対戦中に切断された→ユーザの接続状態をリセット
-    if (isConnected[clientId] !== undefined) {
+    if (isConnected[clientId] !== undefined && isConnected[clientId] !== "") {
+      io.to(isConnected[clientId]).emit("OPPONENT_DISCONNECTED");
+      numClients[isConnected[clientId]]--;
       isConnected[clientId] = "";
-      numClients[roomId]--;
-      io.to(roomId).emit("OPPONENT_DISCONNECTED");
     }
   });
 
+  // ルームから退出する時の処理
   socket.on("ROOM_LEAVING", (data) => {
-    console.log(`${data.clientId}が退出しました。`);
+    console.log(`[disconnect] ${data.clientId}`);
     isConnected[data.clientId] = "";
   });
 
@@ -97,7 +98,6 @@ io.on("connection", (socket: socketio.Socket) => {
   socket.on(
     "ACCEPT_JOIN_ROOM",
     (data: { roomId: string; clientId: string; name: string }) => {
-      console.log(isConnected[data.clientId]);
       if (
         isConnected[data.clientId] === undefined ||
         isConnected[data.clientId] === ""
@@ -110,7 +110,7 @@ io.on("connection", (socket: socketio.Socket) => {
         if (numClients[data.roomId] < maxRoomNum) {
           socket.join(data.roomId);
           console.log(
-            `room:${data.roomId}にclient:${data.name}が入室しました.`
+            `[join room] client:${data.name}, id:${data.clientId} in room:${data.roomId}`
           );
           if (numClients[data.roomId] === 0) {
             player1Name = data.name;
