@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import RoadingSpiner from "../../components/organisms/RoadingSpiner";
-
-import { PlayerState } from "../../types/PlayerState";
+import LoadingDice from "../../components/organisms/LoadingDice";
 
 const YahtzeeWaiting = (props: any) => {
   const socket = props.socket;
@@ -69,7 +67,10 @@ const YahtzeeWaiting = (props: any) => {
 
   return (
     <div>
-      <RoadingSpiner />
+      <LoadingDice />
+      <div style={{ textAlign: "center", fontSize: "2rem", margin: "50px" }}>
+        matching...
+      </div>
     </div>
   );
 };
