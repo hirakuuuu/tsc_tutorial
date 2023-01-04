@@ -1,7 +1,7 @@
 import React from "react";
-import "../../style/components/RoadingSpiner.css";
+import "../../style/components/LoadingSpiner.css";
 
-const RoadingSpiner = () => {
+const LoadingSpiner = () => {
   return (
     <div className="spinner-box">
       <div className="configure-border-1">
@@ -14,4 +14,4 @@ const RoadingSpiner = () => {
   );
 };
 
-export default RoadingSpiner;
+export default LoadingSpiner;

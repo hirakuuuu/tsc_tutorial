@@ -1,3 +1,5 @@
+import { Button, TextField } from "@material-ui/core";
+
 type Props = {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -10,10 +12,23 @@ export const InputArea = (props: Props) => {
   const { value, onChange, placeholder, onClick, buttonText } = props;
   return (
     <div style={{ textAlign: "center", justifyContent: "center" }}>
-      <input placeholder={placeholder} value={value} onChange={onChange} />
-      <button onClick={onClick} disabled={!value}>
+      <TextField
+        id="outlined-basic"
+        label={placeholder}
+        variant="outlined"
+        // placeholder=
+        value={value}
+        onChange={onChange}
+      />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={onClick}
+        style={{ margin: "10px" }}
+        disabled={!value}
+      >
         {buttonText}
-      </button>
+      </Button>
     </div>
   );
 };
