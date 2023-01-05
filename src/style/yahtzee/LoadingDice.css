@@ -3,34 +3,25 @@
   10% {
     transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
   }
-  15%,
-  25% {
+  16%,
+  26% {
     transform: rotateX(0deg) rotateY(-90deg) rotateZ(0deg);
   }
-  30%,
-  40% {
+  32%,
+  42% {
     transform: rotateX(-90deg) rotateY(0deg) rotateZ(0deg);
   }
-  45%,
-  55% {
+  48%,
+  58% {
     transform: rotateX(90deg) rotateY(0deg) rotateZ(0deg);
   }
-  60%,
-  70% {
-    transform: rotateX(0deg) rotateY(-270deg) rotateZ(0deg);
+  64%,
+  74% {
+    transform: rotateX(0deg) rotateY(90deg) rotateZ(0deg);
   }
-  75%,
-  85% {
-    transform: rotateX(0deg) rotateY(180deg) rotateZ(0deg);
-  }
+  80%,
   90% {
-    transform: rotateX(360deg) rotateY(180deg) rotateZ(0deg);
-  }
-  95% {
-    transform: rotateX(360deg) rotateY(-180deg) rotateZ(0deg);
-  }
-  100% {
-    transform: rotateX(0deg) rotateY(0deg) rotateZ(360deg);
+    transform: rotateX(0deg) rotateY(180deg) rotateZ(0deg);
   }
 }
 .cb01-loading {
@@ -39,7 +30,7 @@
   width: 150px;
   height: 150px;
   left: 0px;
-  animation: kaiten 15s linear infinite;
+  animation: kaiten 10s linear infinite;
 }
 .cb01-loading div {
   position: absolute;

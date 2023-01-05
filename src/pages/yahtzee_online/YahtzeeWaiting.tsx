@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Grid } from "@material-ui/core";
 import LoadingDice from "../../components/organisms/LoadingDice";
 
 const YahtzeeWaiting = (props: any) => {
@@ -66,12 +67,31 @@ const YahtzeeWaiting = (props: any) => {
   }, []);
 
   return (
-    <div>
-      <LoadingDice />
-      <div style={{ textAlign: "center", fontSize: "2rem", margin: "50px" }}>
-        matching...
+    <Grid
+      container
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      style={{ minHeight: "90vh" }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          top: "40%",
+        }}
+      >
+        <div>
+          <LoadingDice />
+          <div
+            style={{ textAlign: "center", fontSize: "2rem", margin: "50px" }}
+          >
+            waiting...
+          </div>
+        </div>
       </div>
-    </div>
+    </Grid>
   );
 };
 

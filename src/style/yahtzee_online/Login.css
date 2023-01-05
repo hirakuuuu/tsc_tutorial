@@ -1,0 +1,11 @@
+.yahtzee-login-wrapper {
+  height: 100%;
+  align-items: center;
+}
+
+.yahtzee-login-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+}

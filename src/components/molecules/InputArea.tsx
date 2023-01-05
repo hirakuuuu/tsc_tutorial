@@ -11,7 +11,7 @@ type Props = {
 export const InputArea = (props: Props) => {
   const { value, onChange, placeholder, onClick, buttonText } = props;
   return (
-    <div style={{ textAlign: "center", justifyContent: "center" }}>
+    <div>
       <TextField
         id="outlined-basic"
         label={placeholder}
@@ -20,15 +20,6 @@ export const InputArea = (props: Props) => {
         value={value}
         onChange={onChange}
       />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={onClick}
-        style={{ margin: "10px" }}
-        disabled={!value}
-      >
-        {buttonText}
-      </Button>
     </div>
   );
 };
