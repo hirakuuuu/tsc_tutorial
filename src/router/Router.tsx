@@ -14,8 +14,8 @@ const port = 5000;
 const socket = io();
 // サーバに接続できた場合のイベント処理を定義する
 socket.on("connect", () => {
-  console.log(`socket.connectを出力`);
-  console.log(socket.connect()); // サーバに接続できたかどうかを表示
+  console.log(`[接続完了]`);
+  // console.log(socket.connect()); // サーバに接続できたかどうかを表示
 });
 
 const Router = () => {
