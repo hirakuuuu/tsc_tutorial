@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { io } from "socket.io-client";
 
 import Main from "../pages/Main";
@@ -9,7 +9,7 @@ import YahtzeeLogin from "../pages/yahtzee_online/YahtzeeLogin";
 import YahtzeeOnline from "../pages/yahtzee_online/YahtzeeOnline";
 import YahtzeeWaiting from "../pages/yahtzee_online/YahtzeeWaiting";
 
-const port = 5000;
+// const port = 5000;
 // `https://asobitai.onrender.com:${port}`
 const socket = io();
 // サーバに接続できた場合のイベント処理を定義する

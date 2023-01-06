@@ -3,9 +3,11 @@ import Router from "./router/Router";
 
 const App = () => {
   return (
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
-      <Router />
-    </BrowserRouter>
+    <>
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <Router />
+      </BrowserRouter>
+    </>
   );
 };
 

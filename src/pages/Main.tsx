@@ -1,13 +1,10 @@
 import React from "react";
 import CardButton from "../components/organisms/CardButton";
-import LinkButton from "../components/organisms/LinkButton";
-
 import "../style/Main.css";
-
-import logo from "../image/sample.jpg";
 import marubatsu_logo from "../image/marubatsu.jpg";
 import othello_logo from "../image/othello.jpg";
 import yahtzee_logo from "../image/yahtzee.jpg";
+import Footer from "../components/organisms/Footer";
 
 const Main = () => {
   return (
@@ -47,6 +44,7 @@ const Main = () => {
           detail={"5個のサイコロで役を揃えるゲーム"}
         />
       </div>
+      <Footer />
     </div>
   );
 };
